@@ -8,8 +8,8 @@ use sha2::{digest::Digest, Sha256};
 
 use secp256kfun::{marker::*, Scalar};
 
-pub type PubScalarZ = Scalar<Public, Zero>;
-pub type PubScalarNz = Scalar<Public, NonZero>;
+type PubScalarZ = Scalar<Public, Zero>;
+type PubScalarNz = Scalar<Public, NonZero>;
 
 extern crate merlin;
 
@@ -426,7 +426,7 @@ impl NormProof {
     }
 }
 
-pub(crate) fn log(n: usize) -> usize {
+fn log(n: usize) -> usize {
     32 - 1 - (n as u32).leading_zeros() as usize
 }
 
@@ -441,7 +441,7 @@ fn rand_scalar_vec(l: u32) -> Vec<PubScalarZ> {
     (0..l).map(|_| rand_scalar()).collect()
 }
 
-pub(crate) fn tester(sz_w: u32, sz_l: u32) {
+fn tester(sz_w: u32, sz_l: u32) {
     let gens = BaseGens::new(sz_w, sz_l);
 
     let mut transcript = Transcript::new(b"test");
@@ -556,3 +556,10 @@ fn bench_prover(ct: &mut Criterion) {
         )
     });
 }
+
+// fn criterion_benchmark(c: &mut Criterion) {
+//     c.bench_function("tester", |b| b.iter(|| tester(black_box(64), black_box(8))));
+// }
+
+criterion_group!(benches, bench_prover);
+criterion_main!(benches);
